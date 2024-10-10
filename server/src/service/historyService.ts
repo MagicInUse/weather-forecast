@@ -16,7 +16,7 @@ class HistoryService {
   // TODONE: Define a read method that reads from the searchHistory.json file
   private async read(): Promise<City[]> {
     try {
-      const data = await fs.readFile('db.json', 'utf8');
+      const data = await fs.readFile('searchHistory.json', 'utf8');
       return JSON.parse(data);
     } catch (err) {
       console.error(err);
@@ -26,7 +26,7 @@ class HistoryService {
   // TODONE: Define a write method that writes the updated cities array to the searchHistory.json file
   private async write(cities: City[]): Promise<void> {
     try {
-      await fs.writeFile('db.json', JSON.stringify(cities));
+      await fs.writeFile('searchHistory.json', JSON.stringify(cities));
     } catch (err) {
       console.error(err);
     }

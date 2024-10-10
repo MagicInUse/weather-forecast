@@ -7,33 +7,31 @@ interface Coordinates {
   lon: number;
 }
 
-interface WeatherData {
+// TODONE: Define a class for the Weather object
+class Weather implements Coordinates{
   name: string;
+  lat: number;
+  lon: number;
   current: {
-    dt: number;
+    date: number;
     weather: { description: string }[];
     main: { temp: number; humidity: number };
     wind: { speed: number };
   };
   daily: {
-    dt: number;
+    date: number;
     weather: { description: string }[];
     temp: { max: number };
     humidity: number;
     wind_speed: number;
   }[];
-}
-
-// TODONE: Define a class for the Weather object
-class Weather {
-  constructor(
-    public city: string,
-    public date: string,
-    public description: string,
-    public temp: number,
-    public humidity: number,
-    public windSpeed: number
-  ) {}
+  constructor(name: string, lat: number, lon: number) {
+    this.name = name;
+    this.lat = lat;
+    this.lon = lon;
+    this.current = { date: 0, weather: [{ description: '' }], main: { temp: 0, humidity: 0 }, wind: { speed: 0 } };
+    this.daily = [{ date: 0, weather: [{ description: '' }], temp: { max: 0 }, humidity: 0, wind_speed: 0 }];
+  }
 }
 
 // TODO: Complete the WeatherService class
@@ -64,32 +62,31 @@ class WeatherService {
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData(): Promise<Coordinates> {
     const locationData = await this.fetchLocationData(this.buildGeocodeQuery());
+    console.log('we got here!');
     return this.destructureLocationData(locationData);
   }
   // TODO: Create fetchWeatherData method
-  private async fetchWeatherData(coordinates: Coordinates): Promise<WeatherData> {
+  private async fetchWeatherData(coordinates: Coordinates): Promise<Weather> {
     const response = await fetch(this.buildWeatherQuery(coordinates));
     return await response.json();
   }
   // TODO: Build parseCurrentWeather method
-  private parseCurrentWeather(response: WeatherData): Weather {
-    const { name } = response;
-    const { dt, weather, main, wind } = response.current;
-    const date = new Date(dt * 1000).toLocaleDateString();
-    const description = weather[0].description;
-    const temp = main.temp;
-    const humidity = main.humidity;
-    const windSpeed = wind.speed;
-    return new Weather(name, date, description, temp, humidity, windSpeed);
+  private parseCurrentWeather(response: Weather): Weather {
+    const { name, lat, lon } = response;
+    return new Weather(name, lat, lon);
   }
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(currentWeather: Weather, weatherData: WeatherData): Weather[] {
-    const forecastArray = weatherData.daily.map((day) => {
-      const { dt, weather, temp, humidity, wind_speed } = day;
-      const date = new Date(dt * 1000).toLocaleDateString();
-      const description = weather[0].description;
-      const tempMax = temp.max;
-      return new Weather(currentWeather.city, date, description, tempMax, humidity, wind_speed);
+  private buildForecastArray(weatherData: Weather): Weather[] {
+    const forecastArray = weatherData.daily.map((daily) => {
+      const { name } = weatherData;
+      return new Weather(name, weatherData.lat, weatherData.lon);
+      daily = {
+        date: daily.date,
+        weather: daily.weather,
+        temp: daily.temp,
+        humidity: daily.humidity,
+        wind_speed: daily.wind_speed,
+      };
     });
     return forecastArray;
   }
@@ -99,7 +96,7 @@ class WeatherService {
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates);
     const currentWeather = this.parseCurrentWeather(weatherData);
-    const forecastArray = this.buildForecastArray(currentWeather, weatherData);
+    const forecastArray = this.buildForecastArray(weatherData);
     return { currentWeather, forecastArray };
   }
 }
