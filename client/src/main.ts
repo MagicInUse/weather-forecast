@@ -63,10 +63,7 @@ const fetchSearchHistory = async () => {
 
 const deleteCityFromHistory = async (id: string) => {
   await fetch(`/api/weather/history/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    method: 'DELETE'
   });
 };
 
