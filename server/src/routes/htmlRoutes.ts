@@ -5,9 +5,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = Router();
 
-// TODONE: Define route to serve index.html using *
+// TODONE: Define route to serve index.html
 router.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+  res.sendFile(path.join(__dirname, '../../../client/dist/index.html'));
 });
 
 export default router;
