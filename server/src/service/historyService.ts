@@ -42,10 +42,6 @@ class HistoryService {
   }
   // TODONE: Define an addCity method that adds a city to the searchHistory.json file
   async addCity(city: string) {
-    if (!city) {
-      throw new Error('City name is required');
-    }
-
     // Add a unique id to the city using uuid package
     const newCity: City = {
       id: uuidv4(),
