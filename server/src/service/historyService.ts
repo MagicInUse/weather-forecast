@@ -4,10 +4,10 @@ import fs from 'node:fs/promises';
 // TODONE: Define a City class with name and id properties
 class City {
   id: string;
-  cityName: string;
+  name: string;
   constructor(cityName: string) {
     this.id = uuidv4();
-    this.cityName = cityName;
+    this.name = cityName;
   }
 }
 
@@ -45,7 +45,7 @@ class HistoryService {
     // Add a unique id to the city using uuid package
     const newCity: City = {
       id: uuidv4(),
-      cityName: city,
+      name: city
     };
 
     // Get all cities, add the new city, write all the updated cities, return the newCity
