@@ -14,8 +14,6 @@ app.use(express.static('client/dist'));
 
 // TODONE: Implement middleware for parsing JSON and urlencoded form data
 app.use(express.json());
-// used to better parse data sent via forms
-app.use(express.urlencoded({ extended: true }));
 
 // TODONE: Implement middleware to connect the routes
 app.use(routes);

@@ -47,8 +47,8 @@ const fetchWeather = async (cityName: string) => {
 
   console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+  renderCurrentWeather(weatherData.current);
+  renderForecast(weatherData.forecast);
 };
 
 const fetchSearchHistory = async () => {
@@ -63,7 +63,10 @@ const fetchSearchHistory = async () => {
 
 const deleteCityFromHistory = async (id: string) => {
   await fetch(`/api/weather/history/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 };
 
@@ -77,7 +80,6 @@ const renderCurrentWeather = (currentWeather: any): void => {
   const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
     currentWeather;
 
-  // convert the following to typescript
   heading.textContent = `${city} (${date})`;
   weatherIcon.setAttribute(
     'src',
@@ -96,7 +98,7 @@ const renderCurrentWeather = (currentWeather: any): void => {
   }
 };
 
-const renderForecast = (forecast: any): void => {
+const renderForecast = (forecast: any[]): void => {
   const headingCol = document.createElement('div');
   const heading = document.createElement('h4');
 
@@ -109,9 +111,9 @@ const renderForecast = (forecast: any): void => {
     forecastContainer.append(headingCol);
   }
 
-  for (let i = 0; i < forecast.length; i++) {
-    renderForecastCard(forecast[i]);
-  }
+  forecast.forEach(day => {
+    renderForecastCard(day);
+  });
 };
 
 const renderForecastCard = (forecast: any) => {
@@ -131,6 +133,8 @@ const renderForecastCard = (forecast: any) => {
   windEl.textContent = `Wind: ${windSpeed} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
 
+  col.append(cardTitle, weatherIcon, tempEl, windEl, humidityEl);
+
   if (forecastContainer) {
     forecastContainer.append(col);
   }
@@ -147,11 +151,10 @@ const renderSearchHistory = async (searchHistory: any) => {
         '<p class="text-center">No Previous Search History</p>';
     }
 
-    // * Start at end of history array and count down to show the most recent cities at the top.
-    for (let i = historyList.length - 1; i >= 0; i--) {
-      const historyItem = buildHistoryListItem(historyList[i]);
+    historyList.forEach((city: any) => {
+      const historyItem = buildHistoryListItem(city);
       searchHistoryContainer.append(historyItem);
-    }
+    });
   }
 };
 
