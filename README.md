@@ -7,7 +7,7 @@ Welcome to the Weather Forecast App! This application provides real-time weather
 - **TypeScript**: For static type checking and enhanced JavaScript features.
 - **Node.js**: For server-side scripting.
 - **Express.js**: For handling server requests and responses.
-- **OpenWeatherMap API**: For fetching weather data.
+- [**OpenWeatherMap API**](https://openweathermap.org/): For fetching weather data.
 
 ## Instructions
 
